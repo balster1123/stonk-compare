@@ -75,9 +75,12 @@ class StockComparison:
         )
 
 
-def get_hist(tickers: typing.List[str] = None, period: str = "ytd", interval: str = "1d"):
+def get_hist(tickers: typing.List[str] = None, period: str = "ytd", interval: str = "1d", sort_tickers=False):
     if not tickers:
         tickers = DEFAULT_TICKERS
+
+    if sort_tickers:
+        tickers = sorted(tickers)
 
     session = requests_cache.CachedSession("yfinance.cache")
     session.headers['User-agent'] = 'stonk-compare/1.0'
@@ -89,7 +92,7 @@ def get_hist(tickers: typing.List[str] = None, period: str = "ytd", interval: st
         comparison.calc_stats(history)
         stats.append(comparison)
 
-    print(stats)
+    return stats
 
 
 def get_ticker_pairs(ticker_names):
@@ -97,4 +100,4 @@ def get_ticker_pairs(ticker_names):
 
 
 if __name__ == '__main__':
-    get_hist(["GME", "AMC", "AMZN", "NOK", "BB", "TSLA", "SPY"], "1mo", "1d")
+    print(get_hist(["GME", "AMC", "AMZN", "NOK", "BB", "TSLA", "SPY"], "1mo", "1d"))
